@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeshiDoko - Rails版モック</title>
+
+    <!-- Tailwind CSS CDN with custom config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'terracotta': '#D4704C',
+                        'deep-orange': '#B85C3C',
+                        'cream': '#FFF8F0',
+                        'warm-white': '#FFFBF5',
+                        'charcoal': '#2A2520',
+                        'soft-black': '#3D3530',
+                        'accent-turquoise': '#4A9B8E',
+                        'gold': '#D4AF37',
+                        'muted-red': '#C85A4A',
+                    },
+                    fontFamily: {
+                        'display': ['DM Serif Display', 'serif'],
+                        'body': ['Crimson Text', 'serif'],
+                        'accent': ['Cormorant Garamond', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-body bg-warm-white text-charcoal leading-relaxed pb-20 overflow-x-hidden">
+
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-br from-terracotta to-deep-orange text-cream py-8 px-4 text-center shadow-lg sticky top-0 z-50 border-b-4 border-charcoal animate-slide-down">
+        <h1 class="font-display text-4xl md:text-5xl font-normal tracking-wide animate-fade-in-scale" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+            🍽️ MeshiDoko
+        </h1>
+        <p class="text-sm mt-2 opacity-90">Rails + Hotwire + Tailwind CSS版</p>
+    </header>
+
+    <!-- ナビゲーション -->
+    <!-- 実際のRailsでは、data-turbo-frameで画面遷移を制御 -->
+    <nav class="bg-cream flex shadow-md sticky top-24 z-40 border-b-2 border-terracotta"
+         style="animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;"
+         data-controller="navigation">
+        <button class="nav-btn-underline flex-1 py-4 px-6 border-none bg-terracotta text-cream font-accent text-xl font-semibold cursor-pointer transition-all duration-400 border-b-4 border-charcoal tracking-wider"
+                data-action="click->navigation#show"
+                data-screen="search">
+            検索
+        </button>
+        <button class="nav-btn-underline flex-1 py-4 px-6 border-none bg-transparent text-soft-black font-accent text-xl font-semibold cursor-pointer transition-all duration-400 border-b-4 border-transparent hover:text-terracotta tracking-wider"
+                data-action="click->navigation#show"
+                data-screen="favorites">
+            お気に入り
+        </button>
+    </nav>
+
+    <!-- メインコンテンツエリア -->
+    <main class="max-w-7xl mx-auto">
+
+        <!-- 検索画面 -->
+        <section id="search-screen" class="screen active animate-screen-fade-in"
+                 data-turbo-frame="search">
+            <div class="py-12 px-4 max-w-2xl mx-auto">
+                <h2 class="font-display text-4xl mb-6 text-charcoal font-normal tracking-wide animate-fade-in-up">
+                    お店を探す
+                </h2>
+
+                <form class="bg-cream p-12 rounded-2xl shadow-xl border-4 border-terracotta relative form-decorative-border"
+                      style="animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;"
+                      data-controller="search"
+                      data-action="submit->search#submit">
+
+                    <!-- 料理のジャンル -->
+                    <div class="mb-8 animate-fade-in-up form-group-stagger">
+                        <label for="genre" class="block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide">
+                            料理のジャンル
+                        </label>
+                        <select id="genre"
+                                class="w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5">
+                            <option value="">選択してください</option>
+                            <option value="japanese">和食</option>
+                            <option value="chinese">中華</option>
+                            <option value="italian">イタリアン</option>
+                            <option value="french">フレンチ</option>
+                            <option value="noodle">麺類</option>
+                            <option value="rice">ご飯もの</option>
+                            <option value="yakiniku">焼肉</option>
+                            <option value="izakaya">居酒屋</option>
+                        </select>
+                    </div>
+
+                    <!-- 場所 -->
+                    <div class="mb-8 animate-fade-in-up form-group-stagger">
+                        <label for="location" class="block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide">
+                            場所（エリア）
+                        </label>
+                        <input type="text"
+                               id="location"
+                               class="w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
+                               placeholder="例: 渋谷、新宿、東京駅">
+                    </div>
+
+                    <!-- 予算 -->
+                    <div class="mb-8 animate-fade-in-up form-group-stagger">
+                        <label for="budget" class="block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide">
+                            予算（1人あたり）
+                        </label>
+                        <select id="budget"
+                                class="w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5">
+                            <option value="">選択してください</option>
+                            <option value="500-1000">〜1,000円</option>
+                            <option value="1000-2000">1,000円〜2,000円</option>
+                            <option value="2000-3000">2,000円〜3,000円</option>
+                            <option value="3000-5000">3,000円〜5,000円</option>
+                            <option value="5000+">5,000円〜</option>
+                        </select>
+                    </div>
+
+                    <!-- 営業中のみ -->
+                    <div class="mb-8 animate-fade-in-up form-group-stagger">
+                        <label class="flex items-center cursor-pointer text-lg">
+                            <input type="checkbox"
+                                   id="is-open"
+                                   class="w-6 h-6 mr-3 cursor-pointer accent-terracotta">
+                            <span class="text-soft-black font-body">営業中のみ表示</span>
+                        </label>
+                    </div>
+
+                    <!-- 検索ボタン -->
+                    <button type="button"
+                            class="btn-ripple w-full bg-gradient-to-br from-terracotta to-deep-orange text-cream px-6 py-4 rounded-lg font-accent text-xl font-semibold cursor-pointer transition-all duration-400 shadow-xl border-4 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-2xl active:translate-y-0 active:scale-100 tracking-wider"
+                            style="animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s backwards;"
+                            data-action="click->search#execute">
+                        検索する
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 検索結果一覧画面 -->
+        <section id="results-screen" class="screen"
+                 data-turbo-frame="results">
+            <div class="py-8 px-4">
+                <div class="mb-8 animate-fade-in-up">
+                    <button class="bg-transparent border-none text-terracotta font-accent text-xl py-2 cursor-pointer inline-flex items-center font-semibold tracking-wide transition-all duration-300 hover:-translate-x-1 hover:text-deep-orange"
+                            data-controller="navigation"
+                            data-action="click->navigation#back"
+                            data-screen="search">
+                        ← 戻る
+                    </button>
+                    <h2 class="font-display text-4xl mb-2 text-charcoal font-normal tracking-wide">検索結果</h2>
+                    <p class="text-soft-black font-accent text-xl italic">8件のお店が見つかりました</p>
+                </div>
+
+                <!-- レストランカードグリッド -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-4">
+
+                    <!-- カード1 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta animate-card-fade-in"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="1">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/FF6B6B/FFFFFF?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-cream border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-soft-black z-10 hover:scale-125 hover:rotate-12 hover:bg-terracotta hover:text-cream"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon">
+                                ♡
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                イタリア食堂 ラ・トラットリア
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★☆</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.2</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">🍝 イタリアン</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 ¥2,000〜¥3,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区道玄坂1-2-3</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                                営業中
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- カード2 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta animate-card-fade-in"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="2">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/4ECDC4/FFFFFF?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-muted-red border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-cream z-10 hover:scale-125 hover:rotate-12"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon"
+                                    data-favorite-active="true">
+                                ♥
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                和食処 さくら亭
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★★</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.8</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">🍱 和食</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区宇田川町5-6-7</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                                営業中
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- カード3 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta animate-card-fade-in"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="3">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/FFE66D/333333?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-cream border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-soft-black z-10 hover:scale-125 hover:rotate-12 hover:bg-terracotta hover:text-cream"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon">
+                                ♡
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                ラーメン龍
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★☆</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.0</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">🍜 麺類</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 〜¥1,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区神南1-8-9</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-soft-black text-cream border-2 border-charcoal">
+                                準備中
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- カード4 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta animate-card-fade-in"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="4">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/A8E6CF/333333?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-cream border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-soft-black z-10 hover:scale-125 hover:rotate-12 hover:bg-terracotta hover:text-cream"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon">
+                                ♡
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                焼肉ダイニング 牛吉
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★☆</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.3</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">🥩 焼肉</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 ¥3,000〜¥5,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区桜丘町10-11-12</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                                営業中
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- お店詳細画面 -->
+        <section id="detail-screen" class="screen"
+                 data-turbo-frame="detail">
+            <div class="bg-cream min-h-screen animate-fade-in-up">
+                <button class="bg-transparent border-none text-terracotta font-accent text-xl py-2 px-4 cursor-pointer inline-flex items-center font-semibold tracking-wide transition-all duration-300 hover:-translate-x-1 hover:text-deep-orange"
+                        data-controller="navigation"
+                        data-action="click->navigation#backToResults">
+                    ← 戻る
+                </button>
+
+                <div class="relative">
+                    <!-- メイン画像 -->
+                    <div class="mb-8">
+                        <img src="https://via.placeholder.com/800x400/FF6B6B/FFFFFF?text=Main+Restaurant+Image"
+                             alt="お店のメイン画像"
+                             class="w-full h-96 md:h-[500px] object-cover border-b-4 border-terracotta brightness-95 contrast-110">
+                    </div>
+
+                    <!-- 画像ギャラリー -->
+                    <div class="grid grid-cols-4 gap-3 p-4 bg-warm-white">
+                        <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=1"
+                             alt="画像1"
+                             class="w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange">
+                        <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=2"
+                             alt="画像2"
+                             class="w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange">
+                        <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=3"
+                             alt="画像3"
+                             class="w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange">
+                        <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=4"
+                             alt="画像4"
+                             class="w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange">
+                    </div>
+
+                    <!-- 基本情報 -->
+                    <div class="p-8 bg-gradient-to-b from-warm-white to-cream">
+                        <h2 class="font-display text-4xl md:text-5xl mb-2 text-charcoal font-normal tracking-tight">
+                            イタリア食堂 ラ・トラットリア
+                        </h2>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-gold text-lg tracking-widest">★★★★☆</span>
+                            <span class="font-accent font-bold text-xl text-terracotta">4.2</span>
+                            <span class="text-soft-black text-base opacity-70">(128件)</span>
+                        </div>
+                        <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                            営業中
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 詳細情報セクション -->
+                <div class="p-4">
+
+                    <!-- 住所・アクセス -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">📍 住所・アクセス</h3>
+                        <p class="font-body text-soft-black leading-relaxed text-lg">
+                            東京都渋谷区道玄坂1-2-3 渋谷ビル3F
+                        </p>
+                        <div class="mt-4 bg-gray-200 h-48 flex items-center justify-center rounded-lg border-4 border-terracotta">
+                            <span class="text-gray-600 text-lg">[Google Map 表示エリア]</span>
+                        </div>
+                    </div>
+
+                    <!-- 営業時間 -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🕐 営業時間</h3>
+                        <table class="w-full border-separate border-spacing-y-2">
+                            <tr class="transition-all hover:bg-warm-white">
+                                <td class="p-3 bg-cream font-accent font-semibold text-terracotta text-lg w-32">月〜金</td>
+                                <td class="p-3 bg-cream font-body">11:30〜14:30 / 17:30〜22:00</td>
+                            </tr>
+                            <tr class="transition-all hover:bg-warm-white">
+                                <td class="p-3 bg-cream font-accent font-semibold text-terracotta text-lg">土日祝</td>
+                                <td class="p-3 bg-cream font-body">11:30〜22:00（通し営業）</td>
+                            </tr>
+                            <tr class="transition-all hover:bg-warm-white">
+                                <td class="p-3 bg-cream font-accent font-semibold text-terracotta text-lg">定休日</td>
+                                <td class="p-3 bg-cream font-body">火曜日</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 予算 -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">💴 予算</h3>
+                        <p class="font-body text-soft-black leading-loose text-lg">
+                            ランチ: ¥1,000〜¥1,500<br>
+                            ディナー: ¥2,500〜¥3,500
+                        </p>
+                    </div>
+
+                    <!-- ジャンル -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🍝 ジャンル</h3>
+                        <p class="font-body text-soft-black text-lg">イタリアン / パスタ / ピザ</p>
+                    </div>
+
+                    <!-- SNS -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">📱 SNS</h3>
+                        <div class="flex gap-3 flex-wrap">
+                            <a href="#"
+                               class="relative overflow-hidden px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
+                               style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);">
+                                Instagram
+                            </a>
+                            <a href="#"
+                               class="relative overflow-hidden px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
+                               style="background: #1DA1F2;">
+                                X (Twitter)
+                            </a>
+                            <a href="#"
+                               class="relative overflow-hidden px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
+                               style="background: #1877F2;">
+                                Facebook
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 詳細情報・予約 -->
+                    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md animate-fade-in-up info-section-stagger">
+                        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🔗 詳細情報・予約</h3>
+                        <div class="flex flex-col gap-4">
+                            <a href="#"
+                               class="link-arrow relative px-8 py-4 rounded-lg no-underline font-accent font-semibold text-xl text-center transition-all duration-400 tracking-wide bg-warm-white border-4 border-orange-600 text-orange-600 hover:translate-x-2 hover:scale-105 hover:shadow-lg">
+                                食べログで見る
+                            </a>
+                            <a href="#"
+                               class="link-arrow relative px-8 py-4 rounded-lg no-underline font-accent font-semibold text-xl text-center transition-all duration-400 tracking-wide bg-warm-white border-4 border-red-600 text-red-600 hover:translate-x-2 hover:scale-105 hover:shadow-lg">
+                                ホットペッパーで見る
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- アクションボタン（Sticky Footer） -->
+                <div class="p-4 flex gap-4 bg-cream shadow-2xl sticky bottom-0 border-t-4 border-terracotta">
+                    <button class="flex-1 bg-warm-white text-terracotta border-4 border-terracotta px-6 py-3 rounded-lg font-accent text-lg font-semibold cursor-pointer transition-all duration-400 hover:bg-terracotta hover:text-cream hover:scale-105"
+                            data-controller="favorite"
+                            data-action="click->favorite#toggle">
+                        ♥ お気に入りに追加
+                    </button>
+                    <button class="btn-ripple flex-grow-[2] bg-gradient-to-br from-terracotta to-deep-orange text-cream px-6 py-3 rounded-lg font-accent text-xl font-semibold cursor-pointer transition-all duration-400 shadow-xl border-4 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
+                        予約する
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- お気に入り一覧画面 -->
+        <section id="favorites-screen" class="screen"
+                 data-turbo-frame="favorites">
+            <div class="py-8 px-4">
+                <h2 class="font-display text-4xl mb-2 text-charcoal font-normal tracking-wide">お気に入り</h2>
+                <p class="text-soft-black font-accent text-xl mb-8 italic">2件保存されています</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-4">
+
+                    <!-- お気に入りカード1 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="2">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/4ECDC4/FFFFFF?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-muted-red border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-cream z-10 hover:scale-125 hover:rotate-12"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon"
+                                    data-favorite-active="true">
+                                ♥
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                和食処 さくら亭
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★★</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.8</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">🍱 和食</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区宇田川町5-6-7</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                                営業中
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- お気に入りカード2 -->
+                    <div class="card-asymmetric card-corner-accent bg-cream rounded-2xl overflow-visible shadow-md cursor-pointer transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:border-terracotta"
+                         data-controller="navigation"
+                         data-action="click->navigation#showDetail"
+                         data-detail-id="5">
+                        <div class="relative w-full h-72 overflow-hidden card-image-clip">
+                            <img src="https://via.placeholder.com/400x250/95E1D3/333333?text=Restaurant+Image"
+                                 alt="レストラン画像"
+                                 class="w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100">
+                            <button class="absolute top-4 right-4 bg-muted-red border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 text-cream z-10 hover:scale-125 hover:rotate-12"
+                                    data-controller="favorite"
+                                    data-action="click->favorite#toggle"
+                                    data-favorite-target="icon"
+                                    data-favorite-active="true">
+                                ♥
+                            </button>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
+                                カフェ＆バー モーニングスター
+                            </h3>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-gold text-lg tracking-widest">★★★★☆</span>
+                                <span class="font-accent font-bold text-xl text-terracotta">4.1</span>
+                            </div>
+                            <p class="flex flex-wrap gap-3 mb-2">
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">☕ カフェ</span>
+                                <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="text-base text-soft-black mb-2 opacity-80">📍 東京都渋谷区神宮前3-4-5</p>
+                            <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
+                                営業中
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Stimulus風JavaScript（デモ用） -->
+    <!-- 実際のRailsではStimulusコントローラーとして実装 -->
+    <script>
+        // Navigation Controller
+        document.querySelectorAll('[data-controller="navigation"] [data-action*="navigation#show"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const screenId = this.getAttribute('data-screen');
+                showScreen(screenId + '-screen');
+                updateNav(screenId);
+            });
+        });
+
+        document.querySelectorAll('[data-action*="navigation#back"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const screenId = this.getAttribute('data-screen');
+                showScreen(screenId + '-screen');
+                updateNav(screenId);
+            });
+        });
+
+        document.querySelectorAll('[data-action*="navigation#showDetail"]').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('[data-controller="favorite"]')) {
+                    showScreen('detail-screen');
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-action*="navigation#backToResults"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                showScreen('results-screen');
+            });
+        });
+
+        // Search Controller
+        document.querySelectorAll('[data-action*="search#execute"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                showScreen('results-screen');
+            });
+        });
+
+        // Favorite Controller
+        document.querySelectorAll('[data-controller="favorite"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const icon = this.querySelector('[data-favorite-target="icon"]') || this;
+                const isActive = this.getAttribute('data-favorite-active') === 'true';
+
+                if (isActive) {
+                    icon.textContent = '♡';
+                    this.classList.remove('bg-muted-red', 'text-cream');
+                    this.classList.add('bg-cream', 'text-soft-black', 'hover:bg-terracotta', 'hover:text-cream');
+                    this.setAttribute('data-favorite-active', 'false');
+                } else {
+                    icon.textContent = '♥';
+                    this.classList.remove('bg-cream', 'text-soft-black', 'hover:bg-terracotta', 'hover:text-cream');
+                    this.classList.add('bg-muted-red', 'text-cream');
+                    this.setAttribute('data-favorite-active', 'true');
+                }
+            });
+        });
+
+        // Helper functions
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function updateNav(screen) {
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-terracotta', 'text-cream', 'border-charcoal');
+                btn.classList.add('bg-transparent', 'text-soft-black', 'border-transparent', 'hover:text-terracotta');
+            });
+            const activeBtn = document.querySelector(`nav [data-screen="${screen}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-transparent', 'text-soft-black', 'border-transparent', 'hover:text-terracotta');
+                activeBtn.classList.add('bg-terracotta', 'text-cream', 'border-charcoal');
+            }
+        }
+    </script>
+
+</body>
+</html>

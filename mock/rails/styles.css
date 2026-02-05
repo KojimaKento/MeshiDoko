@@ -1,0 +1,287 @@
+/* ==========================================
+   MeshiDoko Rails版 - カスタムCSS
+   Tailwindで対応できない部分のみ記載
+   ========================================== */
+
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+/* Background Mesh Gradient */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(212, 112, 76, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(74, 155, 142, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Noise Texture Overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Ensure all content is above background */
+header, nav, main {
+    position: relative;
+    z-index: 2;
+}
+
+/* Custom Animations */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px) rotate(-2deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+@keyframes screenFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animations */
+.animate-slide-down {
+    animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-fade-in-scale {
+    animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+}
+
+.animate-card-fade-in {
+    animation: cardFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.animate-screen-fade-in {
+    animation: screenFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Staggered animation delays for cards */
+.animate-card-fade-in:nth-child(1) { animation-delay: 0.1s; }
+.animate-card-fade-in:nth-child(2) { animation-delay: 0.2s; }
+.animate-card-fade-in:nth-child(3) { animation-delay: 0.3s; }
+.animate-card-fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+/* Staggered animation delays for form groups */
+.form-group-stagger:nth-child(1) { animation-delay: 0.4s; }
+.form-group-stagger:nth-child(2) { animation-delay: 0.5s; }
+.form-group-stagger:nth-child(3) { animation-delay: 0.6s; }
+.form-group-stagger:nth-child(4) { animation-delay: 0.7s; }
+
+/* Staggered animation delays for info sections */
+.info-section-stagger:nth-child(1) { animation-delay: 0.1s; }
+.info-section-stagger:nth-child(2) { animation-delay: 0.2s; }
+.info-section-stagger:nth-child(3) { animation-delay: 0.3s; }
+.info-section-stagger:nth-child(4) { animation-delay: 0.4s; }
+.info-section-stagger:nth-child(5) { animation-delay: 0.5s; }
+.info-section-stagger:nth-child(6) { animation-delay: 0.6s; }
+
+/* Card image clip path (Tailwindでは対応困難) */
+.card-image-clip {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+/* Button ripple effect */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-ripple:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Nav button underline effect */
+.nav-btn-underline {
+    position: relative;
+}
+
+.nav-btn-underline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(212, 112, 76, 0.1);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -1;
+}
+
+.nav-btn-underline:hover::before {
+    transform: scaleY(1);
+}
+
+/* Decorative corner accent for cards */
+.card-corner-accent::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(74, 155, 142, 0.6) 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.card-corner-accent:hover::after {
+    opacity: 1;
+}
+
+/* Decorative border accent for forms */
+.form-decorative-border::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    background: linear-gradient(135deg, #D4704C, #4A9B8E);
+    border-radius: 16px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* External link arrow animation */
+.link-arrow::after {
+    content: '→';
+    position: absolute;
+    right: 20px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-arrow:hover::after {
+    transform: translateX(8px);
+}
+
+/* Asymmetric card rotation */
+.card-asymmetric:nth-child(odd) {
+    transform: rotate(-0.5deg);
+}
+
+.card-asymmetric:nth-child(even) {
+    transform: rotate(0.5deg);
+}
+
+.card-asymmetric:hover {
+    transform: translateY(-8px) rotate(0deg) scale(1.02);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #FFFBF5;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #D4704C, #B85C3C);
+    border-radius: 10px;
+    border: 2px solid #FFFBF5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #B85C3C, #D4704C);
+}
+
+/* Selection styling */
+::selection {
+    background: #D4704C;
+    color: #FFF8F0;
+}
+
+::-moz-selection {
+    background: #D4704C;
+    color: #FFF8F0;
+}
+
+/* Screen visibility (for single-page navigation) */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}

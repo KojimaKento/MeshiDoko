@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) || "MeshiDoko" %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="MeshiDoko">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Google Fonts %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="font-body bg-warm-white text-charcoal leading-relaxed pb-20 overflow-x-hidden">
+    <%# ヘッダー %>
+    <header class="bg-gradient-to-br from-terracotta to-deep-orange text-cream py-8 px-4 text-center shadow-lg sticky top-0 z-50 border-b-4 border-charcoal">
+      <h1 class="font-display text-4xl md:text-5xl font-normal tracking-wide" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+        🍽️ MeshiDoko
+      </h1>
+    </header>
+
+    <%# ナビゲーション %>
+    <nav class="bg-cream flex shadow-md sticky top-24 z-40 border-b-2 border-terracotta">
+      <%= link_to "検索", root_path, class: "flex-1 py-4 px-6 text-center no-underline #{current_page?(root_path) || current_page?(search_path) ? 'bg-terracotta text-cream border-b-4 border-charcoal' : 'bg-transparent text-soft-black border-b-4 border-transparent hover:text-terracotta'} font-accent text-xl font-semibold transition-all duration-400 tracking-wider" %>
+      <%= link_to "お気に入り", favorites_path, class: "flex-1 py-4 px-6 text-center no-underline #{current_page?(favorites_path) ? 'bg-terracotta text-cream border-b-4 border-charcoal' : 'bg-transparent text-soft-black border-b-4 border-transparent hover:text-terracotta'} font-accent text-xl font-semibold transition-all duration-400 tracking-wider" %>
+    </nav>
+
+    <%# メインコンテンツ %>
+    <main class="max-w-7xl mx-auto">
+      <%= yield %>
+    </main>
+  </body>
+</html>

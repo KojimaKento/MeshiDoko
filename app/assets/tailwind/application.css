@@ -1,0 +1,23 @@
+/* Google Fonts Import - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+@import "tailwindcss";
+
+/* Custom Colors - MeshiDoko Theme */
+@theme {
+  /* Terracotta & Cream Palette */
+  --color-terracotta: #D4704C;
+  --color-deep-orange: #B85C3C;
+  --color-cream: #FFF8F0;
+  --color-warm-white: #FFFBF5;
+  --color-charcoal: #2A2520;
+  --color-soft-black: #3D3530;
+  --color-accent-turquoise: #4A9B8E;
+  --color-gold: #D4AF37;
+  --color-muted-red: #C85A4A;
+
+  /* Font Families */
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Crimson Text', serif;
+  --font-accent: 'Cormorant Garamond', serif;
+}

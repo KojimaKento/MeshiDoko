@@ -1,0 +1,67 @@
+<div class="py-12 px-4 max-w-2xl mx-auto">
+  <h2 class="font-display text-4xl mb-6 text-charcoal font-normal tracking-wide">
+    お店を探す
+  </h2>
+
+  <%= form_with url: restaurants_path, method: :get, class: "bg-cream p-12 rounded-2xl shadow-xl border-4 border-terracotta", data: { controller: "search" } do |f| %>
+
+    <%# 料理のジャンル %>
+    <div class="mb-8">
+      <%= f.label :genre, "料理のジャンル", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
+      <%= f.select :genre,
+        options_for_select([
+          ["選択してください", ""],
+          ["和食", "japanese"],
+          ["中華", "chinese"],
+          ["イタリアン", "italian"],
+          ["フレンチ", "french"],
+          ["麺類", "noodle"],
+          ["ご飯もの", "rice"],
+          ["焼肉", "yakiniku"],
+          ["居酒屋", "izakaya"]
+        ]),
+        {},
+        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
+      %>
+    </div>
+
+    <%# 場所 %>
+    <div class="mb-8">
+      <%= f.label :location, "場所（エリア）", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
+      <%= f.text_field :location,
+        placeholder: "例: 渋谷、新宿、東京駅",
+        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
+      %>
+    </div>
+
+    <%# 予算 %>
+    <div class="mb-8">
+      <%= f.label :budget, "予算（1人あたり）", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
+      <%= f.select :budget,
+        options_for_select([
+          ["選択してください", ""],
+          ["〜1,000円", "500-1000"],
+          ["1,000円〜2,000円", "1000-2000"],
+          ["2,000円〜3,000円", "2000-3000"],
+          ["3,000円〜5,000円", "3000-5000"],
+          ["5,000円〜", "5000+"]
+        ]),
+        {},
+        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
+      %>
+    </div>
+
+    <%# 営業中のみ %>
+    <div class="mb-8">
+      <label class="flex items-center cursor-pointer text-lg">
+        <%= f.check_box :is_open, class: "w-6 h-6 mr-3 cursor-pointer accent-terracotta" %>
+        <span class="text-soft-black font-body">営業中のみ表示</span>
+      </label>
+    </div>
+
+    <%# 検索ボタン %>
+    <%= f.submit "検索する",
+      class: "w-full bg-gradient-to-br from-terracotta to-deep-orange text-cream px-6 py-4 rounded-lg font-accent text-xl font-semibold cursor-pointer transition-all duration-400 shadow-xl border-4 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-2xl active:translate-y-0 active:scale-100 tracking-wider"
+    %>
+  <% end %>
+</div>

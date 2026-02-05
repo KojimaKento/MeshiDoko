@@ -1,0 +1,32 @@
+  [1m[35m (103.9ms)[0m  [1m[35mCREATE DATABASE "meshi_doko_development" ENCODING = 'unicode' /*application='MeshiDoko'*/[0m
+  [1m[35m (107.4ms)[0m  [1m[35mCREATE DATABASE "meshi_doko_development" ENCODING = 'unicode' /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='MeshiDoko'*/[0m
+  [1m[35m (1219.6ms)[0m  [1m[35mCREATE DATABASE "meshi_doko_development" ENCODING = 'unicode' /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='MeshiDoko'*/[0m
+  [1m[35m (305.2ms)[0m  [1m[35mCREATE DATABASE "meshi_doko_test" ENCODING = 'unicode' /*application='MeshiDoko'*/[0m
+  [1m[35m (93.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY) /*application='MeshiDoko'*/[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='MeshiDoko'*/[0m
+  [1m[35m (1.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5072577024452502600) /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (20.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (4.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (4.7ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-02-04 20:51:20.530563', '2026-02-04 20:51:20.530568') RETURNING "key" /*application='MeshiDoko'*/[0m
+Migrating to CreateRestaurants (20260204204933)
+  [1m[36mTRANSACTION (12.7ms)[0m  [1m[35mBEGIN /*application='MeshiDoko'*/[0m
+  [1m[35m (24.3ms)[0m  [1m[35mCREATE TABLE "restaurants" ("id" bigserial primary key, "external_id" character varying, "name" character varying, "genre" character varying, "address" character varying, "latitude" decimal, "longitude" decimal, "budget_lunch" integer, "budget_dinner" integer, "rating" decimal, "is_open" boolean, "opening_hours" jsonb, "sns_instagram" character varying, "sns_twitter" character varying, "sns_facebook" character varying, "reservation_url" character varying, "source" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260204204933') RETURNING "version" /*application='MeshiDoko'*/[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT /*application='MeshiDoko'*/[0m
+Migrating to CreateFavorites (20260204204955)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN /*application='MeshiDoko'*/[0m
+  [1m[35m (133.8ms)[0m  [1m[35mCREATE TABLE "favorites" ("id" bigserial primary key, "restaurant_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_287d36f897"
+FOREIGN KEY ("restaurant_id")
+  REFERENCES "restaurants" ("id")
+) /*application='MeshiDoko'*/[0m
+  [1m[35m (3.2ms)[0m  [1m[35mCREATE INDEX "index_favorites_on_restaurant_id" ON "favorites" ("restaurant_id") /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260204204955') RETURNING "version" /*application='MeshiDoko'*/[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*application='MeshiDoko'*/[0m
+  [1m[35m (25.7ms)[0m  [1m[34mSELECT pg_advisory_unlock(5072577024452502600) /*application='MeshiDoko'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (17.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mSET search_path TO "$user", public /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (24.5ms)[0m  [1m[35mSET search_path TO public /*application='MeshiDoko'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO "$user", public /*application='MeshiDoko'*/[0m

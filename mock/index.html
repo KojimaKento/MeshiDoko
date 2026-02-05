@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeshiDoko - ご飯屋さん検索アプリ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <h1 class="logo">🍽️ MeshiDoko</h1>
+    </header>
+
+    <!-- ナビゲーション -->
+    <nav class="nav">
+        <button class="nav-btn active" data-screen="search">検索</button>
+        <button class="nav-btn" data-screen="favorites">お気に入り</button>
+    </nav>
+
+    <!-- メインコンテンツエリア -->
+    <main class="main-content">
+
+        <!-- 検索画面 -->
+        <section id="search-screen" class="screen active">
+            <div class="search-container">
+                <h2 class="screen-title">お店を探す</h2>
+
+                <form class="search-form">
+                    <div class="form-group">
+                        <label for="genre">料理のジャンル</label>
+                        <select id="genre" class="form-control">
+                            <option value="">選択してください</option>
+                            <option value="japanese">和食</option>
+                            <option value="chinese">中華</option>
+                            <option value="italian">イタリアン</option>
+                            <option value="french">フレンチ</option>
+                            <option value="noodle">麺類</option>
+                            <option value="rice">ご飯もの</option>
+                            <option value="yakiniku">焼肉</option>
+                            <option value="izakaya">居酒屋</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">場所（エリア）</label>
+                        <input type="text" id="location" class="form-control" placeholder="例: 渋谷、新宿、東京駅">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">予算（1人あたり）</label>
+                        <select id="budget" class="form-control">
+                            <option value="">選択してください</option>
+                            <option value="500-1000">〜1,000円</option>
+                            <option value="1000-2000">1,000円〜2,000円</option>
+                            <option value="2000-3000">2,000円〜3,000円</option>
+                            <option value="3000-5000">3,000円〜5,000円</option>
+                            <option value="5000+">5,000円〜</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="is-open">
+                            <span>営業中のみ表示</span>
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="showResults()">検索する</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 検索結果一覧画面 -->
+        <section id="results-screen" class="screen">
+            <div class="results-container">
+                <div class="results-header">
+                    <button class="btn-back" onclick="showSearch()">← 戻る</button>
+                    <h2 class="screen-title">検索結果</h2>
+                    <p class="results-count">8件のお店が見つかりました</p>
+                </div>
+
+                <div class="restaurant-list">
+                    <!-- レストランカード1 -->
+                    <div class="restaurant-card" onclick="showDetail(1)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/FF6B6B/FFFFFF?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite">♡</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">イタリア食堂 ラ・トラットリア</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-value">4.2</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">🍝 イタリアン</span>
+                                <span class="info-item">💴 ¥2,000〜¥3,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区道玄坂1-2-3</p>
+                            <span class="badge badge-open">営業中</span>
+                        </div>
+                    </div>
+
+                    <!-- レストランカード2 -->
+                    <div class="restaurant-card" onclick="showDetail(2)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/4ECDC4/FFFFFF?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite active">♥</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">和食処 さくら亭</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-value">4.8</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">🍱 和食</span>
+                                <span class="info-item">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区宇田川町5-6-7</p>
+                            <span class="badge badge-open">営業中</span>
+                        </div>
+                    </div>
+
+                    <!-- レストランカード3 -->
+                    <div class="restaurant-card" onclick="showDetail(3)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/FFE66D/333333?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite">♡</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">ラーメン龍</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-value">4.0</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">🍜 麺類</span>
+                                <span class="info-item">💴 ¥〜¥1,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区神南1-8-9</p>
+                            <span class="badge badge-closed">準備中</span>
+                        </div>
+                    </div>
+
+                    <!-- レストランカード4 -->
+                    <div class="restaurant-card" onclick="showDetail(4)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/A8E6CF/333333?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite">♡</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">焼肉ダイニング 牛吉</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-value">4.3</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">🥩 焼肉</span>
+                                <span class="info-item">💴 ¥3,000〜¥5,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区桜丘町10-11-12</p>
+                            <span class="badge badge-open">営業中</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- お店詳細画面 -->
+        <section id="detail-screen" class="screen">
+            <div class="detail-container">
+                <button class="btn-back" onclick="showResults()">← 戻る</button>
+
+                <div class="detail-header">
+                    <div class="detail-images">
+                        <img src="https://via.placeholder.com/800x400/FF6B6B/FFFFFF?text=Main+Restaurant+Image" alt="お店のメイン画像" class="main-image">
+                        <div class="image-gallery">
+                            <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=1" alt="画像1">
+                            <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=2" alt="画像2">
+                            <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=3" alt="画像3">
+                            <img src="https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=4" alt="画像4">
+                        </div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2 class="restaurant-name-detail">イタリア食堂 ラ・トラットリア</h2>
+                        <div class="restaurant-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-value">4.2</span>
+                            <span class="review-count">(128件)</span>
+                        </div>
+                        <span class="badge badge-open">営業中</span>
+                    </div>
+                </div>
+
+                <div class="detail-body">
+                    <div class="info-section">
+                        <h3 class="section-title">📍 住所・アクセス</h3>
+                        <p class="info-text">東京都渋谷区道玄坂1-2-3 渋谷ビル3F</p>
+                        <div class="map-placeholder">
+                            <div style="background: #e0e0e0; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                [Google Map 表示エリア]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="section-title">🕐 営業時間</h3>
+                        <table class="hours-table">
+                            <tr>
+                                <td>月〜金</td>
+                                <td>11:30〜14:30 / 17:30〜22:00</td>
+                            </tr>
+                            <tr>
+                                <td>土日祝</td>
+                                <td>11:30〜22:00（通し営業）</td>
+                            </tr>
+                            <tr>
+                                <td>定休日</td>
+                                <td>火曜日</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="section-title">💴 予算</h3>
+                        <p class="info-text">
+                            ランチ: ¥1,000〜¥1,500<br>
+                            ディナー: ¥2,500〜¥3,500
+                        </p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="section-title">🍝 ジャンル</h3>
+                        <p class="info-text">イタリアン / パスタ / ピザ</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="section-title">📱 SNS</h3>
+                        <div class="sns-links">
+                            <a href="#" class="sns-btn instagram">Instagram</a>
+                            <a href="#" class="sns-btn twitter">X (Twitter)</a>
+                            <a href="#" class="sns-btn facebook">Facebook</a>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="section-title">🔗 詳細情報・予約</h3>
+                        <div class="external-links">
+                            <a href="#" class="link-btn tabelog">食べログで見る</a>
+                            <a href="#" class="link-btn hotpepper">ホットペッパーで見る</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <button class="btn btn-favorite-large">♥ お気に入りに追加</button>
+                    <button class="btn btn-primary btn-large">予約する</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- お気に入り一覧画面 -->
+        <section id="favorites-screen" class="screen">
+            <div class="favorites-container">
+                <h2 class="screen-title">お気に入り</h2>
+                <p class="favorites-count">2件保存されています</p>
+
+                <div class="restaurant-list">
+                    <!-- お気に入りカード1 -->
+                    <div class="restaurant-card" onclick="showDetail(2)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/4ECDC4/FFFFFF?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite active">♥</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">和食処 さくら亭</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-value">4.8</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">🍱 和食</span>
+                                <span class="info-item">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区宇田川町5-6-7</p>
+                            <span class="badge badge-open">営業中</span>
+                        </div>
+                    </div>
+
+                    <!-- お気に入りカード2 -->
+                    <div class="restaurant-card" onclick="showDetail(5)">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/400x250/95E1D3/333333?text=Restaurant+Image" alt="レストラン画像">
+                            <button class="btn-favorite active">♥</button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="restaurant-name">カフェ＆バー モーニングスター</h3>
+                            <div class="restaurant-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-value">4.1</span>
+                            </div>
+                            <p class="restaurant-info">
+                                <span class="info-item">☕ カフェ</span>
+                                <span class="info-item">💴 ¥1,000〜¥2,000</span>
+                            </p>
+                            <p class="restaurant-address">📍 東京都渋谷区神宮前3-4-5</p>
+                            <span class="badge badge-open">営業中</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // 画面切り替え関数
+        function showScreen(screenId) {
+            // すべての画面を非表示
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            // 指定された画面を表示
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showSearch() {
+            showScreen('search-screen');
+            updateNav('search');
+        }
+
+        function showResults() {
+            showScreen('results-screen');
+        }
+
+        function showDetail(id) {
+            showScreen('detail-screen');
+        }
+
+        function showFavorites() {
+            showScreen('favorites-screen');
+            updateNav('favorites');
+        }
+
+        function updateNav(screen) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-screen="${screen}"]`).classList.add('active');
+        }
+
+        // ナビゲーションボタンのイベント
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const screen = this.getAttribute('data-screen');
+                if (screen === 'search') {
+                    showSearch();
+                } else if (screen === 'favorites') {
+                    showFavorites();
+                }
+            });
+        });
+
+        // お気に入りボタンのトグル
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-favorite')) {
+                e.stopPropagation();
+                e.target.classList.toggle('active');
+                e.target.textContent = e.target.classList.contains('active') ? '♥' : '♡';
+            }
+        });
+    </script>
+</body>
+</html>
