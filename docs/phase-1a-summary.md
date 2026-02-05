@@ -351,17 +351,43 @@ spec/
    - FavoritesController#create/destroy実装
    - Turbo Stream設定
 
-3. **GitHubにプッシュする場合**:
-   - GitHubリポジトリ作成
-   - リモートリポジトリ追加
-   - git push
+3. **GitHubプッシュ** ✅ 完了:
+   - GitHubリポジトリ作成済み: https://github.com/KojimaKento/MeshiDoko
+   - リモートリポジトリ追加済み
+   - プッシュ完了（2026-02-06）
+   - **トラブルシューティング記録**: `docs/github-push-troubleshooting.md`参照
+
+---
+
+## GitHubリポジトリ
+
+**リポジトリURL**: https://github.com/KojimaKento/MeshiDoko
+
+**最終コミット**:
+```
+291b1bf - GitHub Actionsワークフローを一時削除
+1bf8f9c - MeshiDoko Phase 1-A 完了版
+```
+
+**ブランチ**: main
+**ファイル数**: 144個
+**ステータス**: ✅ プッシュ成功
+
+**発生した問題と解決**:
+1. `.gitignore`不足によるキャッシュファイル追跡（2000個以上）→ .gitignore作成とクリーンアップ
+2. Personal Access Token認証エラー → PATの正しい使用方法を適用
+3. Git履歴の肥大化 → orphanブランチで履歴をクリーン化
+4. workflowスコープ不足 → .githubディレクトリを一時削除
+
+詳細は `docs/github-push-troubleshooting.md` を参照してください。
 
 ---
 
 ## まとめ
 
-Phase 1-Aでは、MeshiDokoの全ての主要画面を実装し、モックデザインを忠実に再現しました。サンプルデータによる動作確認も完了し、次のフェーズ（外部API連携またはお気に入り機能実装）に進む準備が整っています。
+Phase 1-Aでは、MeshiDokoの全ての主要画面を実装し、モックデザインを忠実に再現しました。サンプルデータによる動作確認とGitHubへのプッシュも完了し、次のフェーズ（外部API連携またはお気に入り機能実装）に進む準備が整っています。
 
 **完了率**: 100%
 **品質**: モックデザイン完全準拠
+**GitHubリポジトリ**: https://github.com/KojimaKento/MeshiDoko
 **次のステップ**: Phase 1-BまたはPhase 1-C

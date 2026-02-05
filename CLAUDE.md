@@ -720,12 +720,19 @@ a12c67a MeshiDokoプロジェクト初期作成
 
 **Gitコミット**:
 ```
-9ab9d74 Phase 1-A: 基本画面実装完了
+291b1bf GitHub Actionsワークフローを一時削除
+1bf8f9c MeshiDoko Phase 1-A 完了版
 ```
 
 **修正内容**（2026-02-06追加）:
 - カード全体をクリック可能に変更（link_toでカード全体をラップ）
 - お気に入りボタンにevent.stopPropagation()追加（カードリンクと干渉しないように）
+
+**GitHubリポジトリ**: ✅ プッシュ完了
+- リポジトリURL: https://github.com/KojimaKento/MeshiDoko
+- ブランチ: main
+- ファイル数: 144個
+- トラブルシューティング記録: `docs/github-push-troubleshooting.md`
 
 ---
 
@@ -780,6 +787,11 @@ a12c67a MeshiDokoプロジェクト初期作成
 ---
 
 ## 更新履歴
+- 2026-02-06（第6版）: **GitHubリポジトリ作成・プッシュ完了**
+  - GitHubリポジトリ作成: https://github.com/KojimaKento/MeshiDoko
+  - トラブルシューティング実施（.gitignore作成、PAT認証、Git履歴クリーンアップ）
+  - docs/github-push-troubleshooting.md作成（問題と解決方法を文書化）
+  - Phase 1-A完全完了
 - 2026-02-06（第5版）: **Phase 1-A完了（基本画面実装）**
   - 4つの主要画面実装完了（検索、検索結果、詳細、お気に入り）
   - レイアウト実装（ヘッダー、ナビゲーション、Google Fonts統合）
