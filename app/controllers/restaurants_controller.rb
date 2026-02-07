@@ -26,10 +26,13 @@ class RestaurantsController < ApplicationController
   private
 
   def search_params
-    params.permit(:genre, :location, :budget, :is_open)
+    # prefectureパラメータをlocationに統合
+    location = params[:location].presence || params[:prefecture].presence
+
+    params.permit(:genre, :budget, :is_open).merge(location: location).compact
   end
 
   def search_params_present?
-    search_params.values.any?(&:present?)
+    params[:genre].present? || params[:location].present? || params[:prefecture].present? || params[:budget].present? || params[:is_open].present?
   end
 end

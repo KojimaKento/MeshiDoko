@@ -3,7 +3,7 @@
     お店を探す
   </h2>
 
-  <%= form_with url: restaurants_path, method: :get, class: "bg-cream p-12 rounded-2xl shadow-xl border-4 border-terracotta", data: { controller: "search" } do |f| %>
+  <%= form_with url: restaurants_path, method: :get, class: "bg-cream p-12 rounded-2xl shadow-xl border-4 border-terracotta", data: { controller: "location" } do |f| %>
 
     <%# 料理のジャンル %>
     <div class="mb-8">
@@ -11,26 +11,46 @@
       <%= f.select :genre,
         options_for_select([
           ["選択してください", ""],
-          ["和食", "japanese"],
-          ["中華", "chinese"],
-          ["イタリアン", "italian"],
-          ["フレンチ", "french"],
-          ["麺類", "noodle"],
-          ["ご飯もの", "rice"],
-          ["焼肉", "yakiniku"],
-          ["居酒屋", "izakaya"]
+          ["焼肉", "焼肉"],
+          ["イタリアン", "イタリアン"],
+          ["そば", "そば"],
+          ["うどん", "うどん"],
+          ["中華", "中華"],
+          ["カフェ", "カフェ"],
+          ["ラーメン", "ラーメン"],
+          ["寿司", "寿司"],
+          ["居酒屋", "居酒屋"],
+          ["フレンチ", "フレンチ"],
+          ["和食", "和食"],
+          ["洋食", "洋食"]
         ]),
         {},
         class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
       %>
     </div>
 
-    <%# 場所 %>
+    <%# 場所（都道府県） %>
     <div class="mb-8">
-      <%= f.label :location, "場所（エリア）", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
-      <%= f.text_field :location,
-        placeholder: "例: 渋谷、新宿、東京駅",
-        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
+      <%= f.label :prefecture, "都道府県", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
+      <%= f.select :prefecture,
+        options_for_select([
+          ["選択してください", ""],
+          ["東京都", "東京都"]
+        ]),
+        {},
+        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5",
+        data: { location_target: "prefecture", action: "change->location#updateCities" }
+      %>
+    </div>
+
+    <%# 場所（市区町村） - 都道府県選択後に表示 %>
+    <div class="mb-8" data-location-target="cityContainer" style="display: none;">
+      <%= f.label :location, "市区町村", class: "block mb-2 text-soft-black font-accent font-semibold text-lg tracking-wide" %>
+      <%= f.select :location,
+        [],
+        {},
+        class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5",
+        data: { location_target: "city" }
       %>
     </div>
 
@@ -40,11 +60,12 @@
       <%= f.select :budget,
         options_for_select([
           ["選択してください", ""],
-          ["〜1,000円", "500-1000"],
-          ["1,000円〜2,000円", "1000-2000"],
-          ["2,000円〜3,000円", "2000-3000"],
-          ["3,000円〜5,000円", "3000-5000"],
-          ["5,000円〜", "5000+"]
+          ["〜1,000円", "1000"],
+          ["〜1,500円", "1500"],
+          ["〜2,000円", "2000"],
+          ["〜3,000円", "3000"],
+          ["〜5,000円", "5000"],
+          ["〜8,000円", "8000"]
         ]),
         {},
         class: "w-full p-4 border-2 border-terracotta rounded-lg font-body text-lg bg-warm-white text-charcoal transition-all duration-300 focus:outline-none focus:border-deep-orange focus:ring-4 focus:ring-terracotta/20 focus:-translate-y-0.5"
