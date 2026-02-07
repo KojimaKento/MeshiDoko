@@ -626,7 +626,7 @@ end
 
 ---
 
-## 開発進捗（2026-02-05現在）
+## 開発進捗（2026-02-07現在）
 
 ### 完了したセットアップ ✅
 
@@ -743,47 +743,68 @@ a12c67a MeshiDokoプロジェクト初期作成
 
 ---
 
+#### 8. Phase 1-B: 検索機能実装（シードデータ方式） ✅
+**完了日**: 2026-02-07
+
+**実装内容**:
+1. **充実したシードデータ作成** ✅
+   - 6,192件のレストランデータ作成
+   - 12ジャンル × 47都道府県 × 主要都市 × 6予算帯
+   - 営業中50%、閉店中50%の分布
+   - すべての検索条件で必ずヒットする完全なカバレッジ
+
+2. **全47都道府県対応** ✅
+   - 全都道府県の主要市区町村データ（約200箇所）
+   - 東京都は23区 + 主要市部
+   - Stimulusコントローラーで都道府県→市区町村の2段階選択実装
+   - `app/javascript/controllers/location_controller.js`作成
+
+3. **ランチ/ディナー選択機能** ✅
+   - 検索フォームにランチ/ディナー選択フィールド追加
+   - 選択したmeal_typeに応じた予算フィルタリング
+   - 一覧表示でランチ・ディナーを分けて表示（🌅/🌃アイコン）
+   - RestaurantSearchServiceの検索ロジック実装
+
+4. **営業中フィルターの改善** ✅
+   - 営業中の確率を75% → 50%に変更
+   - 最大表示件数を8件 → 20件に増加
+   - フィルターの効果が明確に分かるように改善
+
+5. **RestaurantSearchServiceクラス実装** ✅
+   - `app/services/restaurant_search_service.rb`作成
+   - データベース検索版実装（search_from_database）
+   - 後から外部API版に切り替え可能な設計
+   - 環境変数での切り替え設定（USE_HOTPEPPER_API）
+
+6. **RSpecテスト実装** ✅
+   - RestaurantSearchServiceのテスト（36 examples, 0 failures）
+   - 正常系・異常系・境界値のテスト完備
+
+7. **包括的なドキュメント作成** ✅
+   - `docs/phase-1b-development-guide.md` - 開発ガイド
+   - `docs/phase-1b-search-form-troubleshooting.md` - 検索フォーム不具合修正記録
+   - `docs/phase-1b-nationwide-meal-type.md` - 全国対応・ランチディナー選択機能
+
+**動作確認**: localhost:3000で全機能動作確認済み
+- ✅ 全47都道府県で検索可能
+- ✅ どの条件でも必ず検索結果が表示
+- ✅ ランチ/ディナーで正確な予算フィルタリング
+- ✅ 営業中フィルターが正常に動作
+
+**Gitコミット**:
+```
+f85d820 Phase 1-B: 全国対応・ランチディナー選択機能追加
+2700b48 シードデータ方式による検索機能実装を完了
+a32f8c5 検索フォームの不具合修正と場所検索のプルダウン化
+```
+
+**GitHubリポジトリ**: ✅ プッシュ完了
+
+---
+
 ### 次のステップ（Phase 1: MVP開発継続）
 
-#### Phase 1-B: 検索機能実装（シードデータ方式） 🚀（次のステップ）
-
-**開発方針**: シードデータ方式を採用し、後から外部API（ホットペッパーAPI）に切り替えやすい設計で実装します。
-
-詳細は `docs/phase-1b-development-guide.md` を参照してください。
-
-1. **充実したシードデータの作成**
-   - `db/seeds.rb`に50件以上のリアルなレストランデータを追加
-   - ジャンル、場所、予算、営業状態のバリエーション
-   - `rails db:seed`で実行
-
-2. **RestaurantSearchServiceクラス実装**
-   - `app/services/restaurant_search_service.rb`作成
-   - データベースから検索する実装（後からAPI版に切り替え可能な設計）
-   - 検索条件: ジャンル、場所、予算、営業中フィルター
-   - 環境変数でAPI/DB切り替え可能（`USE_HOTPEPPER_API`）
-
-3. **RestaurantsController更新**
-   - サンプルデータから`RestaurantSearchService`呼び出しに変更
-   - 検索パラメータの処理
-   - 検索結果0件時のメッセージ表示
-
-4. **環境変数の設定（オプション）**
-   - dotenv-rails gemの追加
-   - `.env`ファイル作成（`USE_HOTPEPPER_API=false`）
-   - `.gitignore`に`.env`追加
-
-5. **RSpecでのテスト**
-   - FactoryBotでテストデータ定義
-   - RestaurantSearchServiceのテスト（正常系・異常系・境界値）
-   - RestaurantsControllerのリクエストテスト
-
-**将来実装（Phase 2以降）: 外部API統合**
-- ホットペッパーAPI統合（リクルートID、APIキー取得）
-- Faradayを使ったHTTPリクエスト実装
-- `RestaurantSearchService#search_from_api`メソッド実装
-- WebMockでのテスト
-
-#### Phase 1-C: お気に入り機能 🔄
+#### Phase 1-C: お気に入り機能実装 🚀（次のステップ）
 1. **お気に入り機能のバックエンド実装**
    - FavoritesController#createアクション（POST /favorites）
    - FavoritesController#destroyアクション（DELETE /favorites/:id）
@@ -808,7 +829,40 @@ a12c67a MeshiDokoプロジェクト初期作成
 
 ---
 
+### 将来実装予定（Phase 2以降）
+
+#### 外部API統合（ホットペッパーAPI）
+**目的**: シードデータからリアルタイムの外部データ取得に切り替え
+
+**実装内容**:
+1. **ホットペッパーAPI統合**
+   - リクルートIDアカウント取得、APIキー取得
+   - Faraday gemの追加
+   - `RestaurantSearchService#search_from_api`メソッド実装
+   - 環境変数でAPI/DB切り替え（`USE_HOTPEPPER_API=true`）
+
+2. **レスポンスパース処理**
+   - JSON → Restaurantモデル形式への変換
+   - エラーハンドリング（タイムアウト、APIエラー、レート制限）
+
+3. **テスト実装**
+   - WebMockでAPI通信をモック化
+   - VCRでのHTTP記録・再生（オプション）
+
+**メリット**:
+- Phase 1-Bで実装した設計により、切り替えが容易
+- 既存のコントローラー・ビューはそのまま利用可能
+- 環境変数1つで切り替え可能
+
+---
+
 ## 更新履歴
+- 2026-02-07（第8版）: **Phase 1-B完了（全国対応・ランチディナー選択機能）**
+  - Phase 1-B完了セクション追加（全国対応、ランチディナー選択、6,192件のシードデータ）
+  - 次のステップをPhase 1-Cに更新
+  - 将来実装予定セクション追加（外部API統合の計画を明記）
+  - 開発進捗日付を2026-02-07に更新
+  - 関連ドキュメント: docs/phase-1b-nationwide-meal-type.md
 - 2026-02-07（第7版）: **Phase 1-B開発方針の明確化（シードデータ方式採用）**
   - Phase 1-Bをシードデータ方式優先に変更（後からAPI切り替え可能な設計）
   - docs/phase-1b-development-guide.md作成（詳細な実装手順を文書化）
