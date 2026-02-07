@@ -110,6 +110,9 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
     dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     ed25519 (1.4.0)
     erb (6.0.1)
@@ -266,6 +269,10 @@ GEM
       activesupport (= 8.1.2)
       bundler (>= 1.15.0)
       railties (= 8.1.2)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
@@ -435,6 +442,7 @@ DEPENDENCIES
   bundler-audit
   capybara
   debug
+  dotenv-rails
   factory_bot_rails (~> 6.4)
   faker (~> 3.5)
   image_processing (~> 1.2)
@@ -445,6 +453,7 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.2)
+  rails-controller-testing
   rspec-rails (~> 7.1)
   rubocop-rails-omakase
   selenium-webdriver

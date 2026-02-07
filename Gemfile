@@ -62,7 +62,13 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.4"
 
   # Faker for generating fake data [https://github.com/faker-ruby/faker]
+
+  # dotenv-rails for environment variables [https://github.com/bkeepers/dotenv]
+  gem "dotenv-rails"
   gem "faker", "~> 3.5"
+
+  # rails-controller-testing for assigns in tests [https://github.com/rails/rails-controller-testing]
+  gem "rails-controller-testing"
 end
 
 group :development do

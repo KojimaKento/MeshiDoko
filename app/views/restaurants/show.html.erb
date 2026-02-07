@@ -4,29 +4,28 @@
   <div class="relative">
     <%# メイン画像 %>
     <div class="mb-8">
-      <%= image_tag @restaurant[:image_url], alt: @restaurant[:name], class: "w-full h-96 md:h-[500px] object-cover border-b-4 border-terracotta brightness-95 contrast-110" %>
+      <%= image_tag "https://via.placeholder.com/800x500/FF8E8E/FFFFFF?text=#{ERB::Util.url_encode(@restaurant.genre)}", alt: @restaurant.name, class: "w-full h-96 md:h-[500px] object-cover border-b-4 border-terracotta brightness-95 contrast-110" %>
     </div>
 
-    <%# 画像ギャラリー %>
+    <%# 画像ギャラリー（placeholder） %>
     <div class="grid grid-cols-4 gap-3 p-4 bg-warm-white">
-      <% @restaurant[:images].each_with_index do |img, index| %>
-        <%= image_tag img, alt: "画像#{index + 1}", class: "w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange" %>
+      <% 4.times do |index| %>
+        <%= image_tag "https://via.placeholder.com/150x100/FF8E8E/FFFFFF?text=#{index + 1}", alt: "画像#{index + 1}", class: "w-full h-24 md:h-36 object-cover rounded-lg border-2 border-terracotta cursor-pointer transition-all duration-400 brightness-95 hover:scale-110 hover:-rotate-2 hover:shadow-lg hover:brightness-100 hover:border-deep-orange" %>
       <% end %>
     </div>
 
     <%# 基本情報 %>
     <div class="p-8 bg-gradient-to-b from-warm-white to-cream">
       <h2 class="font-display text-4xl md:text-5xl mb-2 text-charcoal font-normal tracking-tight">
-        <%= @restaurant[:name] %>
+        <%= @restaurant.name %>
       </h2>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-gold text-lg tracking-widest">
-          <%= '★' * @restaurant[:rating].floor %><%= '☆' * (5 - @restaurant[:rating].floor) %>
+          <%= '★' * @restaurant.rating.floor %><%= '☆' * (5 - @restaurant.rating.floor) %>
         </span>
-        <span class="font-accent font-bold text-xl text-terracotta"><%= @restaurant[:rating] %></span>
-        <span class="text-soft-black text-base opacity-70">(<%= @restaurant[:review_count] %>件)</span>
+        <span class="font-accent font-bold text-xl text-terracotta"><%= @restaurant.rating %></span>
       </div>
-      <% if @restaurant[:is_open] %>
+      <% if @restaurant.is_open %>
         <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
           営業中
         </span>
@@ -45,7 +44,7 @@
     <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
       <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">📍 住所・アクセス</h3>
       <p class="font-body text-soft-black leading-relaxed text-lg">
-        <%= @restaurant[:address] %>
+        <%= @restaurant.address %>
       </p>
       <div class="mt-4 bg-gray-200 h-48 flex items-center justify-center rounded-lg border-4 border-terracotta">
         <span class="text-gray-600 text-lg">[Google Map 表示エリア]</span>
@@ -56,10 +55,16 @@
     <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
       <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🕐 営業時間</h3>
       <table class="w-full border-separate border-spacing-y-2">
-        <% @restaurant[:opening_hours].each do |day, hours| %>
-          <tr class="transition-all hover:bg-warm-white">
-            <td class="p-3 bg-cream font-accent font-semibold text-terracotta text-lg w-32"><%= day %></td>
-            <td class="p-3 bg-cream font-body"><%= hours %></td>
+        <% if @restaurant.opening_hours.is_a?(Hash) %>
+          <% @restaurant.opening_hours.each do |day, hours| %>
+            <tr class="transition-all hover:bg-warm-white">
+              <td class="p-3 bg-cream font-accent font-semibold text-terracotta text-lg w-32"><%= day %></td>
+              <td class="p-3 bg-cream font-body"><%= hours %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td class="p-3 bg-cream font-body" colspan="2">営業時間情報なし</td>
           </tr>
         <% end %>
       </table>
@@ -69,47 +74,48 @@
     <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
       <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">💴 予算</h3>
       <p class="font-body text-soft-black leading-loose text-lg">
-        <% if @restaurant[:budget_lunch] > 0 %>
-          ランチ: ¥<%= number_with_delimiter(@restaurant[:budget_lunch]) %>〜<br>
+        <% if @restaurant.budget_lunch && @restaurant.budget_lunch > 0 %>
+          ランチ: ¥<%= number_with_delimiter(@restaurant.budget_lunch) %>〜<br>
         <% end %>
-        ディナー: ¥<%= number_with_delimiter(@restaurant[:budget_dinner]) %>〜
+        <% if @restaurant.budget_dinner && @restaurant.budget_dinner > 0 %>
+          ディナー: ¥<%= number_with_delimiter(@restaurant.budget_dinner) %>〜
+        <% end %>
       </p>
     </div>
 
     <%# ジャンル %>
     <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
       <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🍝 ジャンル</h3>
-      <p class="font-body text-soft-black text-lg"><%= @restaurant[:genre] %></p>
+      <p class="font-body text-soft-black text-lg"><%= @restaurant.genre %></p>
     </div>
 
     <%# SNS %>
-    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
-      <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">📱 SNS</h3>
-      <div class="flex gap-3 flex-wrap">
-        <% if @restaurant[:sns][:instagram] %>
-          <%= link_to "Instagram", @restaurant[:sns][:instagram], class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);" %>
-        <% end %>
-        <% if @restaurant[:sns][:twitter] %>
-          <%= link_to "X (Twitter)", @restaurant[:sns][:twitter], class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: #1DA1F2;" %>
-        <% end %>
-        <% if @restaurant[:sns][:facebook] %>
-          <%= link_to "Facebook", @restaurant[:sns][:facebook], class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: #1877F2;" %>
-        <% end %>
+    <% if @restaurant.sns_instagram.present? || @restaurant.sns_twitter.present? || @restaurant.sns_facebook.present? %>
+      <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
+        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">📱 SNS</h3>
+        <div class="flex gap-3 flex-wrap">
+          <% if @restaurant.sns_instagram.present? %>
+            <%= link_to "Instagram", @restaurant.sns_instagram, target: "_blank", class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);" %>
+          <% end %>
+          <% if @restaurant.sns_twitter.present? %>
+            <%= link_to "X (Twitter)", @restaurant.sns_twitter, target: "_blank", class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: #1DA1F2;" %>
+          <% end %>
+          <% if @restaurant.sns_facebook.present? %>
+            <%= link_to "Facebook", @restaurant.sns_facebook, target: "_blank", class: "px-6 py-3 rounded-full no-underline text-white font-accent font-semibold text-base transition-all duration-400 border-2 border-charcoal hover:-translate-y-1 hover:scale-105 hover:shadow-lg", style: "background: #1877F2;" %>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <%# 詳細情報・予約 %>
-    <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
-      <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🔗 詳細情報・予約</h3>
-      <div class="flex flex-col gap-4">
-        <% if @restaurant[:external_links][:tabelog] %>
-          <%= link_to "食べログで見る", @restaurant[:external_links][:tabelog], class: "px-8 py-4 rounded-lg no-underline font-accent font-semibold text-xl text-center transition-all duration-400 tracking-wide bg-warm-white border-4 border-orange-600 text-orange-600 hover:translate-x-2 hover:scale-105 hover:shadow-lg" %>
-        <% end %>
-        <% if @restaurant[:external_links][:hotpepper] %>
-          <%= link_to "ホットペッパーで見る", @restaurant[:external_links][:hotpepper], class: "px-8 py-4 rounded-lg no-underline font-accent font-semibold text-xl text-center transition-all duration-400 tracking-wide bg-warm-white border-4 border-red-600 text-red-600 hover:translate-x-2 hover:scale-105 hover:shadow-lg" %>
-        <% end %>
+    <% if @restaurant.reservation_url.present? %>
+      <div class="mb-12 p-8 bg-warm-white rounded-lg border-l-4 border-terracotta shadow-md">
+        <h3 class="font-accent text-2xl mb-4 text-charcoal font-semibold">🔗 詳細情報・予約</h3>
+        <div class="flex flex-col gap-4">
+          <%= link_to "ホットペッパーで見る", @restaurant.reservation_url, target: "_blank", class: "px-8 py-4 rounded-lg no-underline font-accent font-semibold text-xl text-center transition-all duration-400 tracking-wide bg-warm-white border-4 border-red-600 text-red-600 hover:translate-x-2 hover:scale-105 hover:shadow-lg" %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
   </div>
 
@@ -118,7 +124,7 @@
     <button class="flex-1 bg-gradient-to-br from-terracotta to-deep-orange text-cream px-6 py-4 rounded-lg font-accent text-xl font-semibold cursor-pointer transition-all duration-400 shadow-xl border-4 border-charcoal hover:-translate-y-1 hover:scale-105 tracking-wider"
             data-controller="favorite"
             data-action="click->favorite#toggle">
-      <%= @restaurant[:is_favorite] ? '♥ お気に入りから削除' : '♡ お気に入りに追加' %>
+      ♡ お気に入りに追加
     </button>
   </div>
 </div>

@@ -480,7 +480,7 @@ end
    - Hotwire（Turbo + Stimulus）の確認（Rails 7では標準搭載）
    - Tailwind CSSの設定（カスタムカラー追加）
    - RSpec, FactoryBot, Capybaraのセットアップ
-   - 外部API（ホットペッパー等）のアカウント取得
+   - dotenv-rails gem（環境変数管理）※オプション
 
 2. **データベース設計・マイグレーション**
    - Restaurantモデルの作成
@@ -497,13 +497,14 @@ end
    - お気に入り一覧画面のUI作成（`favorites#index`）
    - ViewComponentsでコンポーネント化（RestaurantCard等）
 
-4. **検索機能実装**
-   - RestaurantSearchServiceクラスの実装
-   - 外部API連携（Faraday使用）
-   - ホットペッパーAPIからのデータ取得
-   - 検索ロジックの実装
+4. **検索機能実装（シードデータ方式）**
+   - 充実したシードデータ作成（50件以上のレストランデータ）
+   - RestaurantSearchServiceクラスの実装（DB検索版）
+   - 後からAPI版に切り替え可能な設計
+   - 検索ロジックの実装（ジャンル、場所、予算、営業中フィルター）
    - エラーハンドリング
-   - Turbo Streamでの結果表示
+   - 環境変数での切り替え設定
+   - ※外部API連携は Phase 2以降で実装
 
 5. **お気に入り機能実装**
    - Favoriteコントローラーの実装
@@ -525,12 +526,18 @@ end
    - バグ修正
    - レスポンシブ対応の確認
 
-### Phase 2: 機能拡張
-**目標**: 共有機能・個室検索の追加
+### Phase 2: 機能拡張・外部API統合
+**目標**: 実データ取得・共有機能・個室検索の追加
 
-1. 友達と情報を共有する機能
-2. 個室の有無での検索条件追加
-3. UI/UXの改善
+1. **外部API統合（ホットペッパーAPI）**
+   - リクルートIDアカウント取得、APIキー取得
+   - Faraday gemの追加
+   - RestaurantSearchService#search_from_apiメソッド実装
+   - 環境変数でAPI/DB切り替え（USE_HOTPEPPER_API=true）
+   - WebMockでのテスト実装
+2. 友達と情報を共有する機能
+3. 個室の有無での検索条件追加
+4. UI/UXの改善
 
 ### Phase 3: 位置情報機能
 **目標**: 現在地ベースの検索・経路案内
@@ -738,28 +745,43 @@ a12c67a MeshiDokoプロジェクト初期作成
 
 ### 次のステップ（Phase 1: MVP開発継続）
 
-#### Phase 1-B: 外部API連携 🚀（次のステップ）
-1. **ホットペッパーAPI統合**
-   - アカウント取得（リクルートID）
-   - APIキーの環境変数設定（`.env`ファイル）
-   - dotenv-rails gemの追加
+#### Phase 1-B: 検索機能実装（シードデータ方式） 🚀（次のステップ）
+
+**開発方針**: シードデータ方式を採用し、後から外部API（ホットペッパーAPI）に切り替えやすい設計で実装します。
+
+詳細は `docs/phase-1b-development-guide.md` を参照してください。
+
+1. **充実したシードデータの作成**
+   - `db/seeds.rb`に50件以上のリアルなレストランデータを追加
+   - ジャンル、場所、予算、営業状態のバリエーション
+   - `rails db:seed`で実行
 
 2. **RestaurantSearchServiceクラス実装**
    - `app/services/restaurant_search_service.rb`作成
-   - Faradayを使ったHTTPリクエスト実装
-   - 検索パラメータ（genre, location, budget, is_open）をAPIリクエストに変換
-   - レスポンスのパース処理（JSON → Restaurantモデル形式）
-   - エラーハンドリング（タイムアウト、APIエラー、レート制限）
+   - データベースから検索する実装（後からAPI版に切り替え可能な設計）
+   - 検索条件: ジャンル、場所、予算、営業中フィルター
+   - 環境変数でAPI/DB切り替え可能（`USE_HOTPEPPER_API`）
 
 3. **RestaurantsController更新**
-   - サンプルデータからAPI呼び出しに変更
+   - サンプルデータから`RestaurantSearchService`呼び出しに変更
    - 検索パラメータの処理
-   - エラーメッセージの表示
+   - 検索結果0件時のメッセージ表示
 
-4. **RSpecでのテスト**
-   - WebMockでAPI通信をモック化
-   - 正常系・異常系・境界値のテスト
-   - VCRでのHTTP記録・再生（オプション）
+4. **環境変数の設定（オプション）**
+   - dotenv-rails gemの追加
+   - `.env`ファイル作成（`USE_HOTPEPPER_API=false`）
+   - `.gitignore`に`.env`追加
+
+5. **RSpecでのテスト**
+   - FactoryBotでテストデータ定義
+   - RestaurantSearchServiceのテスト（正常系・異常系・境界値）
+   - RestaurantsControllerのリクエストテスト
+
+**将来実装（Phase 2以降）: 外部API統合**
+- ホットペッパーAPI統合（リクルートID、APIキー取得）
+- Faradayを使ったHTTPリクエスト実装
+- `RestaurantSearchService#search_from_api`メソッド実装
+- WebMockでのテスト
 
 #### Phase 1-C: お気に入り機能 🔄
 1. **お気に入り機能のバックエンド実装**
@@ -787,6 +809,12 @@ a12c67a MeshiDokoプロジェクト初期作成
 ---
 
 ## 更新履歴
+- 2026-02-07（第7版）: **Phase 1-B開発方針の明確化（シードデータ方式採用）**
+  - Phase 1-Bをシードデータ方式優先に変更（後からAPI切り替え可能な設計）
+  - docs/phase-1b-development-guide.md作成（詳細な実装手順を文書化）
+  - CLAUDE.mdのPhase 1ロードマップ更新（検索機能実装をシードデータ方式に）
+  - Phase 2に外部API統合を追加（将来実装）
+  - 環境構築から外部APIアカウント取得を削除
 - 2026-02-06（第6版）: **GitHubリポジトリ作成・プッシュ完了**
   - GitHubリポジトリ作成: https://github.com/KojimaKento/MeshiDoko
   - トラブルシューティング実施（.gitignore作成、PAT認証、Git履歴クリーンアップ）

@@ -11,6 +11,10 @@ MeshiDoko/
 ├── CLAUDE.md           # プロジェクト開発ドキュメント
 ├── README.md           # このファイル（プロジェクト概要）
 ├── 要件定義書.md      # 詳細な要件定義
+├── docs/               # 開発ドキュメント
+│   ├── phase-1a-summary.md                # Phase 1-A完了サマリー
+│   ├── phase-1b-development-guide.md      # Phase 1-B実装ガイド
+│   └── github-push-troubleshooting.md     # GitHubトラブルシューティング
 └── mock/               # フロントエンドモック（HTML/CSS）
     ├── README.md       # オリジナル版モックの詳細説明
     ├── index.html      # オリジナル版（Next.js向け）
@@ -43,6 +47,13 @@ MeshiDoko/
 - 成功指標（KPI）
 - 非機能要件
 - 開発スケジュール
+
+### [docs/phase-1b-development-guide.md](./docs/phase-1b-development-guide.md)
+Phase 1-B（検索機能実装）の詳細ガイドです：
+- シードデータ方式の実装手順
+- 外部API統合への切り替え方法（Phase 2以降）
+- RestaurantSearchServiceクラスの実装
+- RSpecでのテスト方法
 
 ## フロントエンドモック
 
@@ -141,16 +152,17 @@ open mock/rails/index.html
 - 全画面の実装
 - Rails版モック作成
 
-### Phase 1: MVP開発（次のステップ） 🚀
-1. **Railsプロジェクト作成**（PostgreSQL指定）
-2. **環境構築**（Hotwire, Tailwind CSS, RSpec）
-3. **データベース設計**（Restaurant, Favorite モデル）
-4. **基本画面実装**（Rails版モックを参考に）
-5. **外部API連携**（ホットペッパー、食べログ）
+### Phase 1: MVP開発（進行中） 🚀
+1. **Railsプロジェクト作成**（PostgreSQL指定） ✅
+2. **環境構築**（Hotwire, Tailwind CSS, RSpec） ✅
+3. **データベース設計**（Restaurant, Favorite モデル） ✅
+4. **基本画面実装**（Rails版モックを参考に） ✅
+5. **検索機能実装**（シードデータ方式）← 次のステップ
 6. **お気に入り機能実装**
 7. **テスト実装**（RSpec + FactoryBot + Capybara）
 
-### Phase 2: 機能拡張
+### Phase 2: 機能拡張・外部API統合
+- **外部API連携**（ホットペッパーAPI）
 - 共有機能
 - 個室検索
 - ユーザー認証（Devise）
@@ -178,9 +190,9 @@ open mock/rails/index.html
 - **Capybara**
 
 ### 外部API
-- ホットペッパーグルメサーチAPI
-- 食べログAPI（利用可能な場合）
-- Google Maps API
+- ホットペッパーグルメサーチAPI（Phase 2以降で統合予定）
+- Google Maps API（地図表示用）
+- ※Phase 1では、シードデータを使用して開発
 
 ### ホスティング
 - Render または Fly.io

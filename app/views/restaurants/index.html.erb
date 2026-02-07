@@ -8,40 +8,40 @@
   <%# レストランカードグリッド %>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-4">
     <% @restaurants.each do |restaurant| %>
-      <%= link_to restaurant_path(restaurant[:id]), class: "block bg-cream rounded-2xl overflow-visible shadow-md transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:border-terracotta no-underline" do %>
+      <%= link_to restaurant_path(restaurant.id), class: "block bg-cream rounded-2xl overflow-visible shadow-md transition-all duration-500 border-2 border-charcoal hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:border-terracotta no-underline" do %>
         <%# 画像とお気に入りボタン %>
         <div class="relative w-full h-72 overflow-hidden">
-          <%= image_tag restaurant[:image_url], alt: restaurant[:name], class: "w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100" %>
+          <%= image_tag "https://via.placeholder.com/400x250/FF8E8E/FFFFFF?text=#{ERB::Util.url_encode(restaurant.genre)}", alt: restaurant.name, class: "w-full h-full object-cover transition-all duration-600 brightness-95 contrast-110 hover:scale-110 hover:brightness-100" %>
 
-          <button class="absolute top-4 right-4 <%= restaurant[:is_favorite] ? 'bg-muted-red text-cream' : 'bg-cream text-soft-black' %> border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 z-10 hover:scale-125 hover:rotate-12"
+          <button class="absolute top-4 right-4 bg-cream text-soft-black border-4 border-charcoal w-12 h-12 rounded-full text-2xl cursor-pointer flex items-center justify-center shadow-lg transition-all duration-400 z-10 hover:scale-125 hover:rotate-12"
                   data-controller="favorite"
                   data-action="click->favorite#toggle"
                   onclick="event.stopPropagation(); event.preventDefault();">
-            <%= restaurant[:is_favorite] ? '♥' : '♡' %>
+            ♡
           </button>
         </div>
 
         <%# カード内容 %>
         <div class="p-8">
           <h3 class="font-display text-3xl mb-2 text-charcoal font-normal tracking-tight">
-            <%= restaurant[:name] %>
+            <%= restaurant.name %>
           </h3>
           <div class="flex items-center gap-3 mb-2">
             <span class="text-gold text-lg tracking-widest">
-              <%= '★' * restaurant[:rating].floor %><%= '☆' * (5 - restaurant[:rating].floor) %>
+              <%= '★' * restaurant.rating.floor %><%= '☆' * (5 - restaurant.rating.floor) %>
             </span>
-            <span class="font-accent font-bold text-xl text-terracotta"><%= restaurant[:rating] %></span>
+            <span class="font-accent font-bold text-xl text-terracotta"><%= restaurant.rating %></span>
           </div>
           <p class="flex flex-wrap gap-3 mb-2">
             <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
-              <%= restaurant[:genre] %>
+              <%= restaurant.genre %>
             </span>
             <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
-              💴 ¥<%= number_with_delimiter(restaurant[:budget_lunch]) %>〜¥<%= number_with_delimiter(restaurant[:budget_dinner]) %>
+              💴 ¥<%= number_with_delimiter(restaurant.budget_lunch) %>〜¥<%= number_with_delimiter(restaurant.budget_dinner) %>
             </span>
           </p>
-          <p class="text-base text-soft-black mb-2 opacity-80">📍 <%= restaurant[:address] %></p>
-          <% if restaurant[:is_open] %>
+          <p class="text-base text-soft-black mb-2 opacity-80">📍 <%= restaurant.address %></p>
+          <% if restaurant.is_open %>
             <span class="inline-block px-4 py-1.5 rounded-full font-accent text-sm font-semibold tracking-wider bg-accent-turquoise text-cream border-2 border-charcoal">
               営業中
             </span>
