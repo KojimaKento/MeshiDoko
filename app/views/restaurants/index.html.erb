@@ -36,8 +36,13 @@
             <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
               <%= restaurant.genre %>
             </span>
-            <span class="font-body text-base text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
-              💴 ¥<%= number_with_delimiter(restaurant.budget_lunch) %>〜¥<%= number_with_delimiter(restaurant.budget_dinner) %>
+          </p>
+          <p class="flex flex-wrap gap-2 mb-2">
+            <span class="font-body text-sm text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
+              🌅 ランチ: ¥<%= number_with_delimiter(restaurant.budget_lunch) %>
+            </span>
+            <span class="font-body text-sm text-soft-black bg-warm-white px-3 py-1 rounded-full border border-terracotta">
+              🌃 ディナー: ¥<%= number_with_delimiter(restaurant.budget_dinner) %>
             </span>
           </p>
           <p class="text-base text-soft-black mb-2 opacity-80">📍 <%= restaurant.address %></p>

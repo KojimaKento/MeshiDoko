@@ -1,25 +1,75 @@
 # db/seeds.rb
-# Phase 1-B: シードデータ作成
+# Phase 1-B: 充実したシードデータ作成（全都道府県・全ジャンル・全予算帯対応）
 
 # 既存データをクリア
 puts "🗑️  Clearing existing data..."
 Restaurant.destroy_all
 Favorite.destroy_all
 
-puts "🍽️  Creating seed restaurants..."
+puts "🍽️  Creating comprehensive seed restaurants..."
 
 # ジャンルのバリエーション
 genres = ['焼肉', 'イタリアン', 'そば', 'うどん', '中華', 'カフェ', 'ラーメン', '寿司', '居酒屋', 'フレンチ', '和食', '洋食']
 
-# 場所のバリエーション
-locations = [
-  { ward: '渋谷区', area: '渋谷' },
-  { ward: '新宿区', area: '新宿' },
-  { ward: '港区', area: '六本木' },
-  { ward: '目黒区', area: '中目黒' },
-  { ward: '世田谷区', area: '三軒茶屋' },
-  { ward: '品川区', area: '五反田' },
-  { ward: '中央区', area: '銀座' }
+# 都道府県と主要都市のマッピング
+locations = {
+  "北海道" => ["札幌市", "函館市", "旭川市"],
+  "青森県" => ["青森市", "弘前市"],
+  "岩手県" => ["盛岡市"],
+  "宮城県" => ["仙台市"],
+  "秋田県" => ["秋田市"],
+  "山形県" => ["山形市"],
+  "福島県" => ["福島市", "郡山市"],
+  "茨城県" => ["水戸市", "つくば市"],
+  "栃木県" => ["宇都宮市"],
+  "群馬県" => ["前橋市", "高崎市"],
+  "埼玉県" => ["さいたま市", "川口市", "川越市"],
+  "千葉県" => ["千葉市", "船橋市", "松戸市"],
+  "東京都" => ["渋谷区", "新宿区", "港区", "目黒区", "世田谷区", "品川区", "中央区", "八王子市", "立川市"],
+  "神奈川県" => ["横浜市", "川崎市", "相模原市"],
+  "新潟県" => ["新潟市", "長岡市"],
+  "富山県" => ["富山市"],
+  "石川県" => ["金沢市"],
+  "福井県" => ["福井市"],
+  "山梨県" => ["甲府市"],
+  "長野県" => ["長野市", "松本市"],
+  "岐阜県" => ["岐阜市"],
+  "静岡県" => ["静岡市", "浜松市"],
+  "愛知県" => ["名古屋市", "豊田市", "岡崎市"],
+  "三重県" => ["津市", "四日市市"],
+  "滋賀県" => ["大津市", "草津市"],
+  "京都府" => ["京都市"],
+  "大阪府" => ["大阪市", "堺市", "東大阪市"],
+  "兵庫県" => ["神戸市", "姫路市", "西宮市"],
+  "奈良県" => ["奈良市"],
+  "和歌山県" => ["和歌山市"],
+  "鳥取県" => ["鳥取市"],
+  "島根県" => ["松江市"],
+  "岡山県" => ["岡山市", "倉敷市"],
+  "広島県" => ["広島市", "福山市"],
+  "山口県" => ["山口市", "下関市"],
+  "徳島県" => ["徳島市"],
+  "香川県" => ["高松市"],
+  "愛媛県" => ["松山市"],
+  "高知県" => ["高知市"],
+  "福岡県" => ["福岡市", "北九州市", "久留米市"],
+  "佐賀県" => ["佐賀市"],
+  "長崎県" => ["長崎市", "佐世保市"],
+  "熊本県" => ["熊本市"],
+  "大分県" => ["大分市", "別府市"],
+  "宮崎県" => ["宮崎市"],
+  "鹿児島県" => ["鹿児島市"],
+  "沖縄県" => ["那覇市", "沖縄市"]
+}
+
+# 予算帯（ランチ・ディナー）
+budget_ranges = [
+  { lunch: 800, dinner: 2000 },   # 低予算
+  { lunch: 1000, dinner: 2500 },  # ~1000円
+  { lunch: 1500, dinner: 3000 },  # ~1500円
+  { lunch: 2000, dinner: 4000 },  # ~2000円
+  { lunch: 3000, dinner: 5000 },  # ~3000円
+  { lunch: 5000, dinner: 8000 }   # ~5000円以上
 ]
 
 # 店名のプレフィックス
@@ -41,48 +91,61 @@ name_prefixes = {
 # 店名のサフィックス
 name_suffixes = ['亭', '屋', '処', 'や', 'ダイニング', 'キッチン', 'ハウス', 'カフェ', 'レストラン', '', '']
 
-# 50件のレストランデータを作成
-50.times do |i|
-  genre = genres.sample
-  location = locations.sample
-  prefix = name_prefixes[genre]&.sample || ''
-  suffix = name_suffixes.sample
+restaurant_count = 0
 
-  Restaurant.create!(
-    external_id: "seed_#{sprintf('%03d', i + 1)}",
-    name: "#{prefix}#{genre}#{suffix} #{location[:area]}店",
-    genre: genre,
-    address: "東京都#{location[:ward]}#{location[:area]}#{rand(1..5)}-#{rand(1..20)}-#{rand(1..30)}",
-    latitude: 35.6 + (rand * 0.1),
-    longitude: 139.6 + (rand * 0.1),
-    budget_lunch: [800, 1000, 1200, 1500, 2000, 2500].sample,
-    budget_dinner: [2000, 3000, 4000, 5000, 6000, 8000].sample,
-    rating: (3.0 + rand * 2.0).round(1),
-    is_open: [true, true, true, false].sample, # 75%の確率で営業中
-    opening_hours: {
-      monday: "11:00-23:00",
-      tuesday: "11:00-23:00",
-      wednesday: "11:00-23:00",
-      thursday: "11:00-23:00",
-      friday: "11:00-24:00",
-      saturday: "11:00-24:00",
-      sunday: "11:00-22:00"
-    },
-    sns_instagram: "https://instagram.com/restaurant_#{sprintf('%03d', i + 1)}",
-    sns_twitter: "https://twitter.com/restaurant_#{sprintf('%03d', i + 1)}",
-    sns_facebook: i.even? ? "https://facebook.com/restaurant_#{sprintf('%03d', i + 1)}" : nil,
-    reservation_url: "https://www.hotpepper.jp/restaurant_#{sprintf('%03d', i + 1)}",
-    source: "seed_data"
-  )
+# 各ジャンル × 各都道府県 × 各予算帯でレストランを作成
+genres.each do |genre|
+  locations.each do |prefecture, cities|
+    # 各都道府県で主要都市にレストランを作成
+    cities.each do |city|
+      # 各予算帯でレストランを作成
+      budget_ranges.each do |budget|
+        restaurant_count += 1
+
+        prefix = name_prefixes[genre]&.sample || ''
+        suffix = name_suffixes.sample
+
+        Restaurant.create!(
+          external_id: "seed_#{sprintf('%04d', restaurant_count)}",
+          name: "#{prefix}#{genre}#{suffix} #{city}店",
+          genre: genre,
+          address: "#{prefecture}#{city}#{rand(1..5)}-#{rand(1..20)}-#{rand(1..30)}",
+          latitude: 35.0 + (rand * 10.0),
+          longitude: 135.0 + (rand * 10.0),
+          budget_lunch: budget[:lunch],
+          budget_dinner: budget[:dinner],
+          rating: (3.0 + rand * 2.0).round(1),
+          is_open: [true, false].sample, # 50%の確率で営業中
+          opening_hours: {
+            monday: "11:00-23:00",
+            tuesday: "11:00-23:00",
+            wednesday: "11:00-23:00",
+            thursday: "11:00-23:00",
+            friday: "11:00-24:00",
+            saturday: "11:00-24:00",
+            sunday: "11:00-22:00"
+          },
+          sns_instagram: "https://instagram.com/restaurant_#{sprintf('%04d', restaurant_count)}",
+          sns_twitter: "https://twitter.com/restaurant_#{sprintf('%04d', restaurant_count)}",
+          sns_facebook: restaurant_count.even? ? "https://facebook.com/restaurant_#{sprintf('%04d', restaurant_count)}" : nil,
+          reservation_url: "https://www.hotpepper.jp/restaurant_#{sprintf('%04d', restaurant_count)}",
+          source: "seed_data"
+        )
+      end
+    end
+  end
 end
 
 puts "✅ Created #{Restaurant.count} restaurants!"
 puts ""
 puts "📊 Data Summary:"
 puts "  Genres: #{Restaurant.pluck(:genre).uniq.sort.join(', ')}"
-puts "  Locations: #{Restaurant.pluck(:address).map { |a| a.match(/東京都(\S+区)/)[1] }.uniq.sort.join(', ')}"
+puts "  Prefectures: #{Restaurant.pluck(:address).map { |a| a.match(/^([^都道府県]+[都道府県])/)[1] rescue nil }.compact.uniq.sort.size} prefectures"
 puts "  Budget Range (Lunch): ¥#{Restaurant.minimum(:budget_lunch)} - ¥#{Restaurant.maximum(:budget_lunch)}"
 puts "  Budget Range (Dinner): ¥#{Restaurant.minimum(:budget_dinner)} - ¥#{Restaurant.maximum(:budget_dinner)}"
 puts "  Open Now: #{Restaurant.where(is_open: true).count} / #{Restaurant.count}"
 puts ""
-puts "🎉 Seed data creation completed!"
+puts "🎯 Coverage:"
+puts "  Each genre × prefecture × budget = guaranteed search results!"
+puts ""
+puts "🎉 Comprehensive seed data creation completed!"

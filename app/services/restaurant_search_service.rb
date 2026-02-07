@@ -35,10 +35,18 @@ class RestaurantSearchService
       restaurants = restaurants.where('address ILIKE ?', "%#{sanitize_sql_like(params[:location])}%")
     end
 
-    # 予算検索（ランチまたはディナーのいずれかが予算以下）
+    # 予算検索（ランチまたはディナーを選択して予算以下のお店を表示）
     if params[:budget].present?
       budget = params[:budget].to_i
-      restaurants = restaurants.where('budget_lunch <= ? OR budget_dinner <= ?', budget, budget)
+      meal_type = params[:meal_type] || 'lunch' # デフォルトはランチ
+
+      if meal_type == 'lunch'
+        # ランチ予算で検索
+        restaurants = restaurants.where('budget_lunch <= ?', budget)
+      else
+        # ディナー予算で検索
+        restaurants = restaurants.where('budget_dinner <= ?', budget)
+      end
     end
 
     # 営業中フィルター
@@ -46,9 +54,9 @@ class RestaurantSearchService
       restaurants = restaurants.where(is_open: true)
     end
 
-    # ランダムに8件取得（結果が多すぎる場合の対策）
-    # 評価順やランダムなど、並び順は要件に応じて変更可能
-    restaurants.limit(8).order('RANDOM()')
+    # ランダムに20件取得（結果が多すぎる場合の対策）
+    # 営業中フィルターの効果を明確にするため、件数を増やす
+    restaurants.limit(20).order('RANDOM()')
   end
 
   # 外部API（ホットペッパー）から検索（Phase 2以降で実装）
