@@ -90,3 +90,6 @@ Temporary Items
 # Ignore bootsnap cache
 /tmp/cache/bootsnap*
 2026-02-05-mock.txt
+
+# Ignore export history (session transcripts and summaries)
+/export-history
